@@ -6,14 +6,16 @@ const timeUnits = {
 
 module.exports = function (msg, args) {
   const tmp = args.join().split('');
-  console.log('tmp', tmp)
-  const unit = tmp.pop();
-  console.log('tmp', tmp)
-  const amount = parseInt(tmp.join(''));
-  console.log(amount)
+  const unit = tmp.pop().toLowerCase();
 
-  setTimeout(() => {
-    msg.reply(`czas minął - ${args}`)
-  }, amount * timeUnits[unit.toLowerCase()]);
+  if (Object.keys(timeUnits).includes(unit)) {    
+    const amount = parseInt(tmp.join(''));
 
+    setTimeout(() => {
+      msg.reply(`czas minął - ${args}`)
+    }, amount * timeUnits[unit]);
+
+  } else {
+    msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h')
+  }
 }
