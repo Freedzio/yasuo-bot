@@ -6,7 +6,6 @@ const timeUnits = {
 
 module.exports = function (msg, args) {
   if (args.length === 1) {
-
     const tmp = args.join().split('');
     const unit = tmp.pop().toLowerCase();
 
