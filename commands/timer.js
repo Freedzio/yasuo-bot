@@ -1,6 +1,17 @@
+const timeUnits = {
+  s: 1000,
+  m: 1000 * 60,
+  h: 1000 * 60 * 60
+}
+
 module.exports = function (msg, args) {
-  console.log(args)
-  const unit = args.join().split('').pop()
-  console.log(unit)
-  msg.reply(unit.toString())
+  const tmp = args.join().split('');
+  const unit = args.join().split('').pop();
+
+  console.log(tmp, unit)
+
+  setTimeout(() => {
+    msg.reply('test')
+  }, 10 * timeUnits[unit]);
+
 }
