@@ -13,6 +13,6 @@ module.exports = function (msg, args) {
 
   setTimeout(() => {
     msg.reply('test')
-  }, 1000 * timeUnits[unit]);
+  }, amount * timeUnits[unit]);
 
 }
