@@ -7,12 +7,12 @@ const timeUnits = {
 module.exports = function (msg, args) {
   const tmp = args.join().split('');
   const unit = args.join().split('').pop();
-  const amount = tmp.filter
+  const amount = tmp.filter(i => i !== unit).join();
 
   console.log(tmp, unit)
 
   setTimeout(() => {
-    msg.reply('test')
+    msg.reply('czas minął')
   }, amount * timeUnits[unit]);
 
 }
