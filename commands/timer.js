@@ -13,6 +13,6 @@ module.exports = function (msg, args) {
 
   setTimeout(() => {
     msg.reply('czas minął')
-  }, amount * timeUnits[unit]);
+  }, amount * timeUnits[unit.toLowerCase()]);
 
 }
