@@ -9,7 +9,7 @@ module.exports = function (msg, args) {
   console.log('tmp', tmp)
   const unit = tmp.pop();
   console.log('tmp', tmp)
-  const amount = parseInt(tmp.join());
+  const amount = parseInt(tmp.join(''));
   console.log(amount)
 
   setTimeout(() => {
