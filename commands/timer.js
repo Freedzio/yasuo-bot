@@ -5,17 +5,21 @@ const timeUnits = {
 }
 
 module.exports = function (msg, args) {
-  const tmp = args.join().split('');
-  const unit = tmp.pop().toLowerCase();
+  if (args.length === 1) {
 
-  if (Object.keys(timeUnits).includes(unit)) {    
-    const amount = parseInt(tmp.join(''));
+    const tmp = args.join().split('');
+    const unit = tmp.pop().toLowerCase();
 
-    setTimeout(() => {
-      msg.reply(`czas minął - ${args}`)
-    }, amount * timeUnits[unit]);
+    if (Object.keys(timeUnits).includes(unit)) {
+      const amount = parseInt(tmp.join(''));
+      msg.reply(`Timer uruchomiony na ${args}`)
 
-  } else {
-    msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h')
+      setTimeout(() => {
+        msg.reply(`czas minął - ${args}`)
+      }, amount * timeUnits[unit]);
+
+    } else {
+      msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h')
+    }
   }
 }
