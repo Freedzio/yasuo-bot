@@ -1,4 +1,4 @@
 module.exports = function (msg, args) {
-  const unit = Array.from(args).pop()
+  const unit = args.split().pop()
   msg.reply(unit)
 }
