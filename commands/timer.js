@@ -1,4 +1,6 @@
 module.exports = function (msg, args) {
+  console.log(args)
   const unit = args.split().pop()
-  msg.reply(unit)
+  console.log(unit)
+  msg.reply(unit.toString())
 }
