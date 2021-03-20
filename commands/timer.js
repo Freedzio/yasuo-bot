@@ -8,6 +8,7 @@ module.exports = function (msg, args) {
   const tmp = args.join().split('');
   const unit = args.join().split('').pop();
   const amount = parseInt(tmp.filter(i => i !== unit).join());
+  console.log(amount)
 
   setTimeout(() => {
     msg.reply(`czas minął - ${args}`)
