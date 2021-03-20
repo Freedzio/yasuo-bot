@@ -9,10 +9,8 @@ module.exports = function (msg, args) {
   const unit = args.join().split('').pop();
   const amount = tmp.filter(i => i !== unit).join();
 
-  console.log(tmp, unit)
-
   setTimeout(() => {
-    msg.reply('czas minął')
+    msg.reply(`czas minął - ${args}`)
   }, amount * timeUnits[unit.toLowerCase()]);
 
 }
