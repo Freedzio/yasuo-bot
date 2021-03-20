@@ -11,17 +11,21 @@ module.exports = function (msg, args) {
 
   if (args.length === 1) {
     if (args[0] === 'cancel') {
-      delete buffer[userId];
+      if (buffer[userId].amount) {
+        msg.reply(`usunąłem Twój timer - ${buffer[userId].amount}`)
+        clearInterval(buffer[userId].t)
+        delete buffer[userId];
+      };
 
     } else if (!Object.keys(buffer).includes(userId)) {
 
-      const tmp = args.split('');
+      const tmp = args.join('').split('');
       const unit = tmp.pop().toLowerCase();
 
       if (Object.keys(timeUnits).includes(unit)) {
         const amount = parseInt(tmp.join(''));
 
-        msg.reply(`Timer uruchomiony na ${args}`);
+        msg.reply(`timer uruchomiony na ${args}`);
 
         const t = setTimeout(() => {
           msg.reply(`czas minął - ${args}`);
@@ -34,12 +38,13 @@ module.exports = function (msg, args) {
             timeout: t,
             amount: args
           }
-        }
+        };
+        
       } else {
-        msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h')
+        msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h, lub anuluj swój aktualny timer komendą "!timer cancel"');
       }
     } else {
-      msg.reply(`masz już nastawiony timer na ${buffer[userId].amount} - poczekaj aż się skończy albo anuluj go komendą "!timer cancel`)
+      msg.reply(`masz już nastawiony timer na ${buffer[userId].amount} - poczekaj aż się skończy albo anuluj go komendą "!timer cancel"`);
     }
   }
 }
