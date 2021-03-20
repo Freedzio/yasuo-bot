@@ -2,23 +2,44 @@ const timeUnits = {
   s: 1000,
   m: 1000 * 60,
   h: 1000 * 60 * 60
-}
+};
+
+let buffer = {};
 
 module.exports = function (msg, args) {
+  const userId = msg.author.id;
+
   if (args.length === 1) {
-    const tmp = args.join().split('');
-    const unit = tmp.pop().toLowerCase();
+    if (args[0] === 'cancel') {
+      delete buffer[userId];
 
-    if (Object.keys(timeUnits).includes(unit)) {
-      const amount = parseInt(tmp.join(''));
-      msg.reply(`Timer uruchomiony na ${args}`)
+    } else if (!Object.keys(buffer).includes(userId)) {
 
-      setTimeout(() => {
-        msg.reply(`czas minął - ${args}`)
-      }, amount * timeUnits[unit]);
+      const tmp = args.split('');
+      const unit = tmp.pop().toLowerCase();
 
+      if (Object.keys(timeUnits).includes(unit)) {
+        const amount = parseInt(tmp.join(''));
+
+        msg.reply(`Timer uruchomiony na ${args}`);
+
+        const t = setTimeout(() => {
+          msg.reply(`czas minął - ${args}`);
+          delete buffer[userId];
+        }, amount * timeUnits[unit]);
+
+        buffer = {
+          ...buffer,
+          [userId]: {
+            timeout: t,
+            amount: args
+          }
+        }
+      } else {
+        msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h')
+      }
     } else {
-      msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h')
+      msg.reply(`masz już nastawiony timer na ${buffer[userId].amount} - poczekaj aż się skończy albo anuluj go komendą "!timer cancel)
     }
   }
 }
