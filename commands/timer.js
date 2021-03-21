@@ -41,7 +41,7 @@ module.exports = function (msg, args) {
         };
         
       } else {
-        msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h, lub anuluj swój aktualny timer komendą "!timer cancel"');
+        msg.reply('nieprawidłowa jednostka czasu - wybierz s, m lub h');
       }
     } else {
       msg.reply(`masz już nastawiony timer na ${buffer[userId].amount} - poczekaj aż się skończy albo anuluj go komendą "!timer cancel"`);
