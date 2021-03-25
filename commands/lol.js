@@ -17,7 +17,7 @@ module.exports = async function (msg, args) {
 
     const summonerData = await summonerResponse.json();
 
-    const { id, accountId, puuid, name, profileIconId } = summonerData;
+    const { id, accountId, puuid, name, profileIconId, summonerLevel } = summonerData;
 
     const summonerRankedResponse = await fetch(`${baseURL}/lol/league/v4/entries/by-summoner/${id}`, {
       headers: {
@@ -31,7 +31,7 @@ module.exports = async function (msg, args) {
       .setTitle(`Staty summonera ${name}`)
       .setColor('DARK_BLUE')
       .setThumbnail(`http://ddragon.leagueoflegends.com/cdn/11.6.1/img/profileicon/${profileIconId}.png`)
-
+      .addField('Poziom', summonerLevel)
     if (summonerRankedData.length > 0) {
 
 
