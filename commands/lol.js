@@ -16,7 +16,6 @@ module.exports = async function (msg, args) {
     });
 
     const summonerData = await summonerResponse.json();
-    console.log(summonerData)
 
     const { id, accountId, puuid, name, profileIconId } = summonerData;
 
@@ -27,22 +26,27 @@ module.exports = async function (msg, args) {
     })
 
     const summonerRankedData = await summonerRankedResponse.json();
-    console.log(summonerRankedData)
 
     const summonerEmbed = new MessageEmbed()
       .setTitle(`Staty summonera ${name}`)
       .setColor('DARK_BLUE')
       .setThumbnail(`http://ddragon.leagueoflegends.com/cdn/11.6.1/img/profileicon/${profileIconId}.png`)
 
-    for (let i = 0; i < summonerRankedData.length; i++) {
-      const { tier, rank, wins, losses, queueType } = summonerRankedData[i];
+    if (summonerRankedData.length > 0) {
 
-      summonerEmbed
-        .addField(queueTypes[queueType], `${tier} ${rank}`)
-        .addField('Wygrane', wins, true)
-        .addField('Przegrane', losses, true)
+
+      for (let i = 0; i < summonerRankedData.length; i++) {
+        const { tier, rank, wins, losses, queueType } = summonerRankedData[i];
+
+        summonerEmbed
+          .addField(queueTypes[queueType], `${tier} ${rank}`)
+          .addField('Wygrane', wins, true)
+          .addField('Przegrane', losses, true)
+      }
+
+    } else {
+      summonerEmbed.setDescription('Ni mo rankingu żadnego')
     }
-
     msg.reply(summonerEmbed)
 
   } catch (e) {
