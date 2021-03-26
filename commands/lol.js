@@ -1,19 +1,24 @@
 const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
-const queueTypes = require('../assets/lol/queueTypes')
+const queueTypes = require('../assets/lol/queueTypes');
+const helpers = require('../helpers');
 
 const baseURL = 'https://eun1.api.riotgames.com';
 const apiKey = process.env.RIOT_TOKEN;
 
+function myFetch(endpoint) {
+  return fetch(`${baseURL}${endpoint}`, {
+    headers: {
+      "X-Riot-Token": apiKey
+    }
+  })
+}
+
 module.exports = async function (msg, args) {
-  const summonerName = args.shift();
+  const summonerName = args.join(' ');
 
   try {
-    const summonerResponse = await fetch(`${baseURL}/lol/summoner/v4/summoners/by-name/${summonerName}`, {
-      headers: {
-        "X-Riot-Token": apiKey
-      }
-    });
+    const summonerResponse = await myFetch(`/lol/summoner/v4/summoners/by-name/${summonerName}`);
 
     const summonerData = await summonerResponse.json();
     // console.log(summonerData);
@@ -23,11 +28,7 @@ module.exports = async function (msg, args) {
     } else {
       const { id, accountId, puuid, name, profileIconId, summonerLevel } = summonerData;
 
-      const summonerRankedResponse = await fetch(`${baseURL}/lol/league/v4/entries/by-summoner/${id}`, {
-        headers: {
-          "X-Riot-Token": apiKey
-        }
-      })
+      const summonerRankedResponse = await myFetch(`/lol/league/v4/entries/by-summoner/${id}`)
 
       const summonerRankedData = await summonerRankedResponse.json();
 
@@ -35,7 +36,8 @@ module.exports = async function (msg, args) {
         .setTitle(`Staty summonera ${name}`)
         .setColor('DARK_BLUE')
         .setThumbnail(`http://ddragon.leagueoflegends.com/cdn/11.6.1/img/profileicon/${profileIconId}.png`)
-        .addField('Poziom', summonerLevel)
+        .addField('Poziom', summonerLevel);
+
       if (summonerRankedData.length > 0) {
 
         for (let i = 0; i < summonerRankedData.length; i++) {
@@ -50,6 +52,16 @@ module.exports = async function (msg, args) {
       } else {
         summonerEmbed.setDescription('Ni mo rankingu żadnego')
       }
+
+      const historyResponse = await myFetch(`/lol/match/v4/matchlists/by-account/${accountId}`)
+      const historyData = await historyResponse.json();
+
+      // console.log(historyData)
+
+      const matchId = helpers.getRandomItem(historyData.matches).gameId
+      const exampleMatchResponse = await myFetch(`/lol/match/v4/matches/${matchId}`)
+      const exampleMatchData = await exampleMatchResponse.json()
+      console.log(exampleMatchData)
 
       msg.reply(summonerEmbed)
     }
