@@ -7,9 +7,9 @@ const baseURL = 'https://eun1.api.riotgames.com';
 const apiKey = process.env.RIOT_TOKEN;
 
 function myFetch(endpoint) {
-  return fetch(`${baseURL}${endpoint}`, {
+  return fetch(baseURL + endpoint, {
     headers: {
-      "X-Riot-Token": apiKey
+      'X-Riot-Token': apiKey
     }
   })
 }
