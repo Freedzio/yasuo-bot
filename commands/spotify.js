@@ -35,10 +35,8 @@ module.exports = async function (msg, args) {
 
   const voiceChannelId = msg.member.voice.channelID;
 
-  msg.client.channels.cache.get(voiceChannelId).join().then(() => {
-    msg.channel.send(`-p ${playlistData.external_urls.spotify}`);
-  })
+  msg.channel.send(`-p ${playlistData.external_urls.spotify}`);
 
-
+  // msg.client.channels.cache.get(voiceChannelId).join().then(() => {
+  // })
 }
-// 807619620201824296
