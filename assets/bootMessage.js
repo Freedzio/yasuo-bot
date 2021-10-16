@@ -1,1 +1,0 @@
-module.exports = 'Yasuo sucker 3000 reporting on duty'
