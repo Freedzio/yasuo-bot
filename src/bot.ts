@@ -3,7 +3,7 @@ import { Client, TextChannel } from "discord.js";
 import { embed } from "./assets/helpEmbed";
 import { bootMessage } from "./assets/bootMessage";
 import * as dotenv from "dotenv";
-import commandHandler from "./commands";
+import commandHandler from "./commandHandler";
 import { getRandomItem } from "./helpers";
 
 const client = new Client();

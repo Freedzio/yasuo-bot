@@ -11,7 +11,7 @@ export default function commandHandler(msg: Message) {
     let command = tokens.shift();
 
     if (command.charAt(0) === "!") {
-      command = command.substring(1);
+      command = command.substring(1).toLowerCase();
 
       const timeOfCommand = new Date();
 

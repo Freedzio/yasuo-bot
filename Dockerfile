@@ -1,4 +1,4 @@
-FROM node:16.10.0-alpine AS base
+FROM node:14.16.1-alpine
 
 ENV DEBUG=false
 
@@ -9,7 +9,7 @@ RUN apk update \
 COPY --chown=node:node  . .
 RUN npm ci \ 
 && npm install -g typescript \ 
- && tsc \ 
+ && tsc
  
 
 USER node
