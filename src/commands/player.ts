@@ -25,6 +25,14 @@ type Queue = {
 const queue = new Map<string, Queue>();
 
 const serverQueue = (message: Message) => queue.get(message.guild.id);
+const isUrl = (songToSearch: string) => {
+  try {
+    new URL(songToSearch);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
 
 export async function execute(message: Message, args: string[]) {
   const voiceChannel = message.member.voice.channel;
