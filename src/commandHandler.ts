@@ -5,7 +5,7 @@ export default function commandHandler(msg: Message) {
   if (
     process.env.DEBUG === "true"
       ? msg.channel.id === process.env.BOT_CHANNEL_ID
-      : true
+      : msg.channel.id !== process.env.BOT_CHANNEL_ID
   ) {
     let tokens = msg.content.split(" ");
     let command = tokens.shift();
