@@ -1,6 +1,7 @@
 import {
   Guild,
   Message,
+  MessageEmbed,
   TextChannel,
   VoiceChannel,
   VoiceConnection,
@@ -142,13 +143,18 @@ async function play(guild: Guild, song: { title: string; url: string }) {
       highWaterMark: 1,
     })
     .on("finish", () => {
-      queueToHandle.textChannel.send(`Done playing: **${song.title}**`);
       queueToHandle.songs.shift();
       play(guild, queueToHandle.songs[0]);
     })
     .on("error", (error) => console.error(error));
   dispatcher.setVolumeLogarithmic(queueToHandle.volume / 5);
-  queueToHandle.textChannel.send(`Start playing: **${song.title}**`);
+
+  const banner = new MessageEmbed()
+    .setTitle("Uwaga tera leci:")
+    .setColor("PURPLE")
+    .addField(`[${song.title}](${song.url})`, "");
+
+  queueToHandle.textChannel.send(banner);
 }
 
 module.exports = {
