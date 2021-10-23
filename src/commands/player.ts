@@ -150,9 +150,9 @@ async function play(guild: Guild, song: { title: string; url: string }) {
   dispatcher.setVolumeLogarithmic(queueToHandle.volume / 5);
 
   const banner = new MessageEmbed()
-    .setTitle("Uwaga tera leci:")
+    .setTitle("Siemanko")
     .setColor("PURPLE")
-    .addField(`[${song.title}](${song.url})`, "");
+    .addField("Tera leci:", `[${song.title}](${song.url})`);
 
   queueToHandle.textChannel.send(banner);
 }
