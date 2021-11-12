@@ -4,7 +4,7 @@ import { bootMessage } from "./bootMessage";
 export const embed = new MessageEmbed()
   .setTitle(bootMessage)
   .setColor("RED")
-  .setImage("https://www.gry-online.pl/Galeria/Html/Wiadomosci/449768375.jpg")
+  // .setImage("https://www.gry-online.pl/Galeria/Html/Wiadomosci/449768375.jpg")
   .setDescription("Przedstawiam dostępne komendy:")
   .addField(
     "!gif <temat gifa>",

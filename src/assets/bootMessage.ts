@@ -1,1 +1,1 @@
-export const bootMessage = "Yasuo sucker 3000 reporting on duty";
+export const bootMessage = "Dzieńdoberek, tutaj Wasz przyjaciel Domino Jachaś!";
