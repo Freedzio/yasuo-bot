@@ -21,8 +21,6 @@ export const addSongs = async (message: Message, args: string[]) => {
 
   const searchResult = (await ytsr(songToSearch, { limit: 1 })).items[0];
 
-  console.log(searchResult);
-
   const isPlaylist = searchResult.type === "playlist";
   const isSong = searchResult.type === "video";
 

@@ -4,6 +4,7 @@ import { getServerQueue } from "../getServerQueue";
 import { queue } from "../player";
 import { banner } from "../songBanner";
 import { SongInfo } from "../types";
+import { shouldLoop } from "./loop";
 
 export const play = async (message: Message, song: SongInfo) => {
   const queueToHandle = getServerQueue(message);
@@ -18,7 +19,7 @@ export const play = async (message: Message, song: SongInfo) => {
       highWaterMark: 1,
     })
     .on("finish", () => {
-      queueToHandle.songs.shift();
+      if (!shouldLoop) queueToHandle.songs.shift();
       play(message, queueToHandle.songs[0]);
     })
     .on("error", (error) => {
