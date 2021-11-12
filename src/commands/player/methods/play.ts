@@ -1,0 +1,32 @@
+import { Message } from "discord.js";
+import ytdl from "ytdl-core";
+import { getServerQueue } from "../getServerQueue";
+import { queue } from "../player";
+import { banner } from "../songBanner";
+import { SongInfo } from "../types";
+
+export const play = async (message: Message, song: SongInfo) => {
+  const queueToHandle = getServerQueue(message);
+  if (!song) {
+    queueToHandle.voiceChannel.leave();
+    queue.delete(message.guild.id);
+    return;
+  }
+
+  const dispatcher = queueToHandle.connection
+    .play(ytdl(song.url, { filter: "audioonly" }), {
+      highWaterMark: 1,
+    })
+    .on("finish", () => {
+      queueToHandle.songs.shift();
+      play(message, queueToHandle.songs[0]);
+    })
+    .on("error", (error) => {
+      console.error(error);
+
+      play(message, queueToHandle.songs[0]);
+    });
+  dispatcher.setVolumeLogarithmic(queueToHandle.volume / 5);
+
+  queueToHandle.textChannel.send(banner(song));
+};
