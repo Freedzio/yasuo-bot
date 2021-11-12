@@ -35,6 +35,13 @@ const isPlaylist = (songToSearch: string) => {
 async function handleSong(message: Message, songToSearch: string) {
   const songInfo = (await ytsr(songToSearch, { limit: 1 })).items[0];
 
+  const itTurnsOutItIsAPlaylist = songInfo.type === "playlist";
+
+  if (itTurnsOutItIsAPlaylist) {
+    handlePlaylist(message, songInfo.playlistID);
+    return;
+  }
+
   const song = {
     title: (songInfo as Video).title,
     url: (songInfo as Video).url,
@@ -48,7 +55,7 @@ async function handleSong(message: Message, songToSearch: string) {
 }
 
 async function handlePlaylist(message: Message, playlistUrl: string) {
-  const playlist = (await ytpl(playlistUrl)).items;
+  const playlist = (await ytpl(playlistUrl, {})).items;
   const songs: SongInfo[] = playlist.map((s) => ({
     title: s.title,
     url: s.shortUrl,
@@ -60,6 +67,11 @@ async function handlePlaylist(message: Message, playlistUrl: string) {
     return message.channel.send(`Dodano ${songs.length} utworów do kolejki!`);
   }
 }
+
+const getMessageAfetAddingSongs = (songs: SongInfo[]) =>
+  songs.length > 1
+    ? `Dodano ${songs.length} utworów do kolejki`
+    : `Dodano ${songs[0].title} do kolejki`;
 
 async function handleNoQueue(message: Message, songs: SongInfo[]) {
   const voiceChannel = message.member.voice.channel;
@@ -76,6 +88,8 @@ async function handleNoQueue(message: Message, songs: SongInfo[]) {
   queue.set(message.guild.id, queueContruct);
 
   songs.forEach((s) => queueContruct.songs.push(s));
+
+  message.channel.send(getMessageAfetAddingSongs(songs));
 
   try {
     var connection = await voiceChannel.join();
@@ -146,7 +160,9 @@ async function play(guild: Guild, song: { title: string; url: string }) {
       queueToHandle.songs.shift();
       play(guild, queueToHandle.songs[0]);
     })
-    .on("error", (error) => console.error(error));
+    .on("error", (error) => {
+      console.error(error);
+    });
   dispatcher.setVolumeLogarithmic(queueToHandle.volume / 5);
 
   const banner = new MessageEmbed()
