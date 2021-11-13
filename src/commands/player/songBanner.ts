@@ -4,5 +4,5 @@ import { SongInfo } from "./types";
 export const banner = (song: SongInfo) =>
   new MessageEmbed()
     .setTitle("Siemanko")
-    .setColor("PURPLE")
+    .setColor("RED")
     .addField("Tera leci:", `[${song.title}](${song.url})`);
