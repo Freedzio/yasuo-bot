@@ -14,8 +14,4 @@ export const embed = new MessageEmbed()
   .addField("!skip", "skipnij utwór")
   .addField("!stop", "usuń playlistę")
   .addField("!timer <czas>", "uruchom timer na X sekund, minut lub godzin")
-  .addField(
-    "!spotify <nazwa playlisty>",
-    "podaj nazwę playlisty, aby otrzymać do niej link (na razie znajduję tylko playlisty na koncie mojego Pana i Stwórcy)"
-  )
   .addField("!pokadupe", "spróbuj szczęścia ;)");
