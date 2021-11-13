@@ -26,8 +26,9 @@ export const play = async (message: Message, song: SongInfo) => {
       console.error(error);
 
       play(message, queueToHandle.songs[0]);
+    })
+    .on("start", () => {
+      queueToHandle.textChannel.send(banner(song));
     });
   dispatcher.setVolumeLogarithmic(queueToHandle.volume / 5);
-
-  queueToHandle.textChannel.send(banner(song));
 };
