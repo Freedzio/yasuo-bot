@@ -89,10 +89,12 @@ export const handleSpotify = async (msg: Message, spotifyUrl: string) => {
         results.push({ title: searchResult.title, url: searchResult.url });
       }
       await putSongsInQueue(msg, results);
+
       break;
 
     default:
       handleUnhandled(msg, musicType);
+
       break;
   }
 };
