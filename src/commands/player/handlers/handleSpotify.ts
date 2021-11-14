@@ -1,10 +1,9 @@
 import { Message } from "discord.js";
 import fetch from "node-fetch";
 import ytsr, { Video } from "ytsr";
-import { getMessageAfterAddingSongs } from "../getMesageAfterAddingSongs";
-import { getServerQueue } from "../getServerQueue";
+import { putSongsInQueue } from "../putSOngsInQueue";
 import { SongInfo } from "../types";
-import { handleNoQueue } from "./handleNoQueue";
+import { handleUnhandled } from "./handleUnhandledType";
 
 const baseURL = "https://api.spotify.com/v1";
 
@@ -16,7 +15,7 @@ function spotifyFetch(endpoint: string, token) {
   });
 }
 
-export const handleSpotify = async (msg: Message, playlistUrl: string) => {
+export const handleSpotify = async (msg: Message, spotifyUrl: string) => {
   const spotifyRes = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
@@ -32,30 +31,68 @@ export const handleSpotify = async (msg: Message, playlistUrl: string) => {
 
   const spotifyAccesToken = spotifyData.access_token;
 
-  const playlistId = playlistUrl
-    .replace("https://open.spotify.com/playlist/", "")
-    .split("?")[0];
+  const spotifySource = spotifyUrl
+    .replace("https://open.spotify.com/", "")
+    .split("/");
+
+  const musicType = spotifySource[0];
+
+  const id = spotifySource[1].split("?")[0];
 
   const playlistRes = await spotifyFetch(
-    `/playlists/${playlistId}`,
+    `/${musicType}s/${id}`,
     spotifyAccesToken
   );
+
   const data = (await playlistRes.json()) as any;
+  switch (musicType) {
+    case "track":
+      const track = `${data.artists[0].name} ${data.name}`;
 
-  const songsToSearch = data.tracks.items.map((i) => i.track.name);
+      const searchResult = (await ytsr(track, { limit: 1 })).items[0] as Video;
 
-  const results: SongInfo[] = [];
+      const { title, url } = searchResult;
+      const song = { title, url };
 
-  for (let i in songsToSearch) {
-    const searchResult = (await ytsr(songsToSearch[i], { limit: 1 }))
-      .items[0] as Video;
-    results.push({ title: searchResult.title, url: searchResult.url });
+      await putSongsInQueue(msg, [song]);
+
+      break;
+
+    case "album":
+      const artist = data.artists[0].name;
+      const tracks = data.tracks.items;
+
+      const searchResults = [];
+
+      for (let i in tracks) {
+        const trackData = (
+          await ytsr(`${artist} ${tracks[i].name}`, { limit: 1 })
+        ).items[0] as Video;
+        const { title, url } = trackData;
+        searchResults.push({ title, url });
+      }
+      await putSongsInQueue(msg, searchResults);
+
+      break;
+
+    case "playlist":
+      const songsToSearch = data.tracks.items.map(
+        (i) => `${i.track.name} ${i.track.artists[0].name}`
+      );
+
+      const results: SongInfo[] = [];
+
+      for (let i in songsToSearch) {
+        const searchResult = (await ytsr(songsToSearch[i], { limit: 1 }))
+          .items[0] as Video;
+
+        results.push({ title: searchResult.title, url: searchResult.url });
+      }
+      await putSongsInQueue(msg, results);
+      break;
+
+    default:
+      handleUnhandled(msg, musicType);
+      break;
   }
-
-  // TODO unify queue no queue handling methodss
-
-  msg.channel.send(getMessageAfterAddingSongs(results));
-
-  if (!getServerQueue(msg)) await handleNoQueue(msg, results);
-  else getServerQueue(msg).songs = getServerQueue(msg).songs.concat(results);
 };

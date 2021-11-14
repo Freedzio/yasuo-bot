@@ -1,8 +1,10 @@
 import { Message, TextChannel } from "discord.js";
-import ytsr, { Playlist } from "ytsr";
+import { ServerResponse } from "http";
+import ytsr, { Playlist, Video } from "ytsr";
 import { handlePlaylist } from "../handlers/handlePlaylist";
 import { handleSong } from "../handlers/handleSong";
 import { handleSpotify } from "../handlers/handleSpotify";
+import { handleUnhandled } from "../handlers/handleUnhandledType";
 
 export const addSongs = async (message: Message, args: string[]) => {
   const voiceChannel = message.member.voice.channel;
@@ -19,9 +21,7 @@ export const addSongs = async (message: Message, args: string[]) => {
   }
 
   const songToSearch = args.join(" ");
-  const isSpotify = songToSearch.startsWith(
-    "https://open.spotify.com/playlist/"
-  );
+  const isSpotify = songToSearch.startsWith("https://open.spotify.com/");
 
   try {
     if (isSpotify) {
@@ -37,12 +37,24 @@ export const addSongs = async (message: Message, args: string[]) => {
       searchResult?.type === "playlist" ||
       songToSearch.includes("playlist?list=");
 
-    if (isPlaylist)
-      await handlePlaylist(
-        message,
-        (searchResult as Playlist)?.playlistID || songToSearch
-      );
-    if (isSong) await handleSong(message, searchResult);
+    switch (true) {
+      case isPlaylist:
+        await handlePlaylist(
+          message,
+          (searchResult as Playlist)?.playlistID || songToSearch
+        );
+
+        break;
+
+      case isSong:
+        await handleSong(message, searchResult as Video);
+        break;
+
+      default:
+        handleUnhandled(message, searchResult.type);
+
+        break;
+    }
   } catch (e) {
     message.channel.send(
       "Oopsie daisy, coś poszło nie tak. Spróbuj dodać utwór w inny sposób"
@@ -52,6 +64,6 @@ export const addSongs = async (message: Message, args: string[]) => {
       message.client.channels.cache.find(
         (c) => c.id === process.env.BOT_CHANNEL_ID
       ) as TextChannel
-    ).send(`${message.content} resulted in error: \n \`${e.toString()}\``);
+    ).send(`\`${message.content} resulted in error: \n ${e.toString()}\``);
   }
 };
