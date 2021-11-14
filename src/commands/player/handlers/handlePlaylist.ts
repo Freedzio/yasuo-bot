@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import ytpl from "ytpl";
-import { putSongsInQueue } from "../putSOngsInQueue";
+import { putSongsInQueue } from "../putSongsInQueue";
 import { SongInfo } from "../types";
 
 export const handlePlaylist = async (message: Message, playlistUrl: string) => {

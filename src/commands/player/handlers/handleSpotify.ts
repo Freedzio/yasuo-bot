@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import fetch from "node-fetch";
 import ytsr, { Video } from "ytsr";
-import { putSongsInQueue } from "../putSOngsInQueue";
+import { putSongsInQueue } from "../putSongsInQueue";
 import { SongInfo } from "../types";
 import { handleUnhandled } from "./handleUnhandledType";
 
