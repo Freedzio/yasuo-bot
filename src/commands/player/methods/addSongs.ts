@@ -57,7 +57,7 @@ export const addSongs = async (message: Message, args: string[]) => {
     }
   } catch (e) {
     message.channel.send(
-      "Oopsie daisy, coś poszło nie tak. Spróbuj dodać utwór w inny sposób"
+      "Oopsie daisy, coś poszło nie tak. Spróbuj podać dokładniejszy opis lub inne źródło"
     );
 
     (
