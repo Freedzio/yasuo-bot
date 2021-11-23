@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import ytdl from "ytdl-core";
 import { getServerQueue } from "../getServerQueue";
 import { queue } from "../player";
@@ -24,6 +24,14 @@ export const play = async (message: Message, song: SongInfo) => {
     })
     .on("error", (error) => {
       console.error(error);
+
+      (
+        message.client.channels.cache.find(
+          (c) => c.id === process.env.BOT_CHANNEL_ID
+        ) as TextChannel
+      ).send(
+        `\`${message.content} resulted in error: \n ${error.toString()}\``
+      );
 
       play(message, queueToHandle.songs[0]);
     })
