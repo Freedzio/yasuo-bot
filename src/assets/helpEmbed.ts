@@ -11,6 +11,10 @@ export const embed = new MessageEmbed()
     "podaj słowo klucz i poszukam odpowiedniego GIFa"
   )
   .addField("!play albo !p <fraza>", "puśc muzyczkę")
+  .addField(
+    "!spotify <nazwa playlisty>",
+    "puść playlistę o podanej nazwie - znajduje tylko playlisty użytkowników będących na liście"
+  )
   .addField("!skip", "skipnij utwór")
   .addField("!stop", "usuń playlistę")
   .addField("!timer <czas>", "uruchom timer na X sekund, minut lub godzin")
