@@ -7,15 +7,7 @@ import { handleUnhandled } from "./handleUnhandledType";
 
 const baseURL = "https://api.spotify.com/v1";
 
-function spotifyFetch(endpoint: string, token) {
-  return fetch(baseURL + endpoint, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
-
-export const handleSpotify = async (msg: Message, spotifyUrl: string) => {
+export const spotifyFetch = async (endpoint: string) => {
   const spotifyRes = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     headers: {
@@ -29,8 +21,16 @@ export const handleSpotify = async (msg: Message, spotifyUrl: string) => {
 
   const spotifyData = (await spotifyRes.json()) as any;
 
-  const spotifyAccesToken = spotifyData.access_token;
+  const token = spotifyData.access_token;
 
+  return fetch(baseURL + endpoint, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const handleSpotify = async (msg: Message, spotifyUrl: string) => {
   const spotifySource = spotifyUrl
     .replace("https://open.spotify.com/", "")
     .split("/");
@@ -39,10 +39,7 @@ export const handleSpotify = async (msg: Message, spotifyUrl: string) => {
 
   const id = spotifySource[1].split("?")[0];
 
-  const playlistRes = await spotifyFetch(
-    `/${musicType}s/${id}`,
-    spotifyAccesToken
-  );
+  const playlistRes = await spotifyFetch(`/${musicType}s/${id}`);
 
   const data = (await playlistRes.json()) as any;
   switch (musicType) {

@@ -3,6 +3,7 @@ import { what } from "./what";
 import { timer } from "./timer";
 import { pokadupe } from "./pokadupe";
 import * as player from "./player/player";
+import { addSpotifyPlaylistByName as spotify } from "./spotify";
 
 export const commands = {
   gif,
@@ -10,4 +11,5 @@ export const commands = {
   timer,
   pokadupe,
   ...player,
+  spotify,
 };
