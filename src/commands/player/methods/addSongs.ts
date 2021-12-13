@@ -12,7 +12,7 @@ export const addSongs = async (message: Message, args: string[]) => {
     return message.channel.send("Wejdź na kanał głosowy aby puszczać muzykę!");
 
   if (
-    voiceChannel &&
+    !voiceChannel ||
     !voiceChannel.members.some((m) => m.id === "815621087764414476")
   )
     return message.reply("Jesteś na innym kanale kasztaniarzu");
