@@ -11,7 +11,10 @@ export const addSongs = async (message: Message, args: string[]) => {
   if (!voiceChannel)
     return message.channel.send("Wejdź na kanał głosowy aby puszczać muzykę!");
 
-  if (!voiceChannel.members.some((m) => m.id === "815621087764414476"))
+  if (
+    voiceChannel &&
+    !voiceChannel.members.some((m) => m.id === "815621087764414476")
+  )
     return message.reply("Jesteś na innym kanale kasztaniarzu");
 
   const permissions = voiceChannel.permissionsFor(message.client.user);
