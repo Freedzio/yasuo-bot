@@ -1,3 +1,4 @@
 git add .
 git commit -m "auto push"
-git push
+git push origin
+git push vps
